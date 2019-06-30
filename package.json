@@ -1,0 +1,44 @@
+{
+  "name": "piskel-clone",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://github.com/aksr666/Piskel/tree/gh-pages",
+  "dependencies": {
+    "downloadjs": "^1.4.7",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "gh-pages": "^2.0.1",
+    "gif-encoder-2": "^1.0.3",
+    "gifshot": "^0.4.5",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "3.0.1",
+    "upng-js": "^2.1.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d build"
+  },
+  "eslintConfig": {
+    "extends": "react-app",
+    "env": {
+      "browser": true,
+      "node": true
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
