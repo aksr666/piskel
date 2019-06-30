@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/aksr666/Piskel/tree/gh-pages/static/css/main.6b730269.chunk.css",
-    "main.js": "/aksr666/Piskel/tree/gh-pages/static/js/main.d41414a3.chunk.js",
-    "main.js.map": "/aksr666/Piskel/tree/gh-pages/static/js/main.d41414a3.chunk.js.map",
-    "runtime~main.js": "/aksr666/Piskel/tree/gh-pages/static/js/runtime~main.4963d864.js",
-    "runtime~main.js.map": "/aksr666/Piskel/tree/gh-pages/static/js/runtime~main.4963d864.js.map",
-    "static/js/2.0f1bd251.chunk.js": "/aksr666/Piskel/tree/gh-pages/static/js/2.0f1bd251.chunk.js",
-    "static/js/2.0f1bd251.chunk.js.map": "/aksr666/Piskel/tree/gh-pages/static/js/2.0f1bd251.chunk.js.map",
-    "index.html": "/aksr666/Piskel/tree/gh-pages/index.html",
-    "precache-manifest.b89d281559c8368f02d66f000b3b2534.js": "/aksr666/Piskel/tree/gh-pages/precache-manifest.b89d281559c8368f02d66f000b3b2534.js",
-    "service-worker.js": "/aksr666/Piskel/tree/gh-pages/service-worker.js",
-    "static/css/main.6b730269.chunk.css.map": "/aksr666/Piskel/tree/gh-pages/static/css/main.6b730269.chunk.css.map",
-    "static/media/style.css": "/aksr666/Piskel/tree/gh-pages/static/media/trash.72e705f3.svg"
+    "main.css": "/static/css/main.3f80c033.chunk.css",
+    "main.js": "/static/js/main.f252b7c2.chunk.js",
+    "main.js.map": "/static/js/main.f252b7c2.chunk.js.map",
+    "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
+    "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
+    "static/js/2.0f1bd251.chunk.js": "/static/js/2.0f1bd251.chunk.js",
+    "static/js/2.0f1bd251.chunk.js.map": "/static/js/2.0f1bd251.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.e6370aa932dbc913b6834de5fd4c941a.js": "/precache-manifest.e6370aa932dbc913b6834de5fd4c941a.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.3f80c033.chunk.css.map": "/static/css/main.3f80c033.chunk.css.map",
+    "static/media/style.css": "/static/media/trash.72e705f3.svg"
   }
 }
