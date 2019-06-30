@@ -36,3 +36,6 @@
 | Jun 26 | Jun 26 | 1h | Save as .piskel format |
 | Jun 26 | Jun 26 | 40m | Save as .rss format  |
 | Jun 28 | Jun 28 | 1.5h | Import .rss format  |
+| Jun 30 | Jun 30 | 3h | Add tests  |
+| Jun 30 | Jun 30 | 1.5h | Refactoring  |
+| Total | 75h 55m |

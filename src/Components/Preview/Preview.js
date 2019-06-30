@@ -17,60 +17,69 @@ export default class Preview extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (JSON.stringify(this.props.frames) === JSON.stringify(nextProps.frames) && nextState.speed === this.state.speed) return false;
+        const { frames, canvasSize } = this.props;
+        let { canvas, pikselSize, currentFrame } = this;
+        if (JSON.stringify(frames) === JSON.stringify(nextProps.frames) && nextState.speed === this.state.speed) return false;
         else {
-            this.pikselSize = Math.floor(this.canvasSize / this.props.canvasSize);
-            this.currentFrame = 0;
-            renderCanvas(this.canvas, this.props.frames[this.currentFrame].layers[this.props.frames[this.currentFrame].currentLayer], this.pikselSize);
+            pikselSize = Math.floor(this.canvasSize / canvasSize);
+            currentFrame = 0;
+            renderCanvas(canvas, frames[currentFrame].layers[frames[currentFrame].currentLayer], pikselSize);
             return true;
         }
     }
 
     componentDidMount() {
-        const canvas = this.refs.canvas;
-        this.pikselSize = Math.floor(this.canvasSize / this.props.canvasSize);
+        const { canvas } = this.refs;
+        const { canvasSize } = this.props;
+        this.pikselSize = Math.floor(this.canvasSize / canvasSize);
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.startAnimation();
     }
 
     componentDidUpdate() {
-        clearInterval(this.interval);
+        const { interval } = this;
+        const { frames, canvasSize } = this.props;
+        clearInterval(interval);
         this.framesToShow = [];
         this.readyToSave = false;
         this.imgsToGif = [];
         this.imgsToPng = [];
-        this.pikselSize = Math.floor(this.canvasSize / this.props.canvasSize); 
+        this.pikselSize = Math.floor(this.canvasSize / canvasSize);
         this.currentFrame = 0;
-        if (this.props.frames[this.currentFrame].layers.length > 1) renderCanvas(this.canvas, this.props.frames[this.currentFrame].layers, this.pikselSize, true);
-        else renderCanvas(this.canvas, this.props.frames[this.currentFrame].layers[0], this.pikselSize);
+        if (frames[this.currentFrame].layers.length > 1) renderCanvas(this.canvas, frames[this.currentFrame].layers, this.pikselSize, true);
+        else renderCanvas(this.canvas, frames[this.currentFrame].layers[0], this.pikselSize);
         this.startAnimation();
     }
 
     startAnimation() {
+        let { framesToShow, ctx, currentFrame, pikselSize, canvasSize, readyToSave, imgsToGif, imgsToPng, canvas } = this;
+        const { frames, setFramesToSave } = this.props;
+        const { speed } = this.state;
         this.interval = setInterval(() => {
-            if (this.framesToShow.length === this.props.frames.length) this.ctx.putImageData(this.framesToShow[this.currentFrame], 0, 0);
+            if (framesToShow.length === frames.length) ctx.putImageData(framesToShow[currentFrame], 0, 0);
             else {
-                renderCanvas(this.canvas, this.props.frames[this.currentFrame].layers, this.pikselSize, true);
-                this.framesToShow.push(this.ctx.getImageData(0, 0, this.canvasSize, this.canvasSize));
+                renderCanvas(canvas, frames[currentFrame].layers, pikselSize, true);
+                framesToShow.push(ctx.getImageData(0, 0, canvasSize, canvasSize));
             }
-            if (this.imgsToGif.length !== this.props.frames.length && !this.readyToSave) {
-                this.imgsToGif.push(this.canvas.toDataURL("image/png"));
-                this.imgsToPng.push(this.ctx.getImageData(0, 0, this.canvasSize, this.canvasSize).data.buffer);
+            if (imgsToGif.length !== frames.length && !readyToSave) {
+                imgsToGif.push(canvas.toDataURL("image/png"));
+                imgsToPng.push(ctx.getImageData(0, 0, canvasSize, canvasSize).data.buffer);
             }
             else {
-                if (this.readyToSave === false) {
-                    this.props.setFramesToSave(this.imgsToGif, this.imgsToPng, this.state.speed);
-                    this.readyToSave = true;
+                if (readyToSave === false) {
+                    setFramesToSave(imgsToGif, imgsToPng, speed);
+                    readyToSave = true;
                 }
             }
-            this.currentFrame++;
-            if (this.currentFrame === this.props.frames.length) this.currentFrame = 0;
-        }, 1000 / this.state.speed);
+            currentFrame++;
+            if (currentFrame === frames.length) currentFrame = 0;
+        }, 1000 / speed);
     }
 
     setSpeed(e) {
-        clearInterval(this.interval);
+        const { interval } = this.state;
+        clearInterval(interval);
         const speed = e.target.value;
         this.setState({ speed });
         this.startAnimation();
@@ -86,11 +95,13 @@ export default class Preview extends React.Component {
     }
 
     showFullScreenButton() {
-        this.refs.fsButton.style.opacity = '1';
+        const { fsButton } = this.refs;
+        fsButton.style.opacity = '1';
     }
 
     hideFullScreenButton() {
-        this.refs.fsButton.style.opacity = '0';
+        const { fsButton } = this.refs;
+        fsButton.style.opacity = '0';
     }
 
     render() {

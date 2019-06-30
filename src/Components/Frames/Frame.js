@@ -9,30 +9,38 @@ export default class Frame extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        if (JSON.stringify(this.props.frame) === JSON.stringify(nextProps.frame)) return false;
+        const { frame } = this.props;
+        if (JSON.stringify(frame) === JSON.stringify(nextProps.frame)) return false;
         else return true;
     }
 
     componentDidMount() {
-        const canvas = this.refs.canvas;
+        const { canvas } = this.refs;
+        const { canvasSize, frame } = this.props
+        const { frameSize } = this;
         this.canvas = canvas;
-        this.pikselSize = Math.floor(this.frameSize / this.props.canvasSize);
-        renderCanvas(canvas, this.props.frame.layers[this.props.frame.currentLayer], this.pikselSize);
+        this.pikselSize = Math.floor(frameSize / canvasSize);
+        renderCanvas(canvas, frame.layers[frame.currentLayer], this.pikselSize);
     }
 
     componentDidUpdate() {
-        this.pikselSize = Math.floor(this.frameSize / this.props.canvasSize);
-        renderCanvas(this.canvas, this.props.frame.layers[this.props.frame.currentLayer], this.pikselSize);
+        const { canvasSize, frame } = this.props;
+        const { canvas, pikselSize } = this;
+        this.pikselSize = Math.floor(this.frameSize / canvasSize);
+        renderCanvas(canvas, frame.layers[frame.currentLayer], pikselSize);
     }
 
+
     showButtons() {
-        this.refs.clone.style.opacity = '1';
-        this.refs.delete.style.opacity = '1';
+        const { cloneFrame, deleteFrame } = this.refs;
+        cloneFrame.style.opacity = '1';
+        deleteFrame.style.opacity = '1';
     }
 
     hideButtons() {
-        this.refs.clone.style.opacity = '0';
-        this.refs.delete.style.opacity = '0';
+        const { cloneFrame, deleteFrame } = this.refs;
+        cloneFrame.style.opacity = '0';
+        deleteFrame.style.opacity = '0';
     }
 
     render() {
@@ -62,8 +70,8 @@ export default class Frame extends React.Component {
                     }}
                 />
                 <p className={'frame-number'}>{this.props.num + 1}</p>
-                <button className={'frame-copy'} ref='clone' onClick={() => this.props.cloneFrame(this.props.frame)} />
-                <button className={'frame-delete'} ref='delete' onClick={() => this.props.deleteFrame(this.props.frame)} />
+                <button className={'frame-copy'} ref='cloneFrame' onClick={() => this.props.cloneFrame(this.props.frame)} />
+                <button className={'frame-delete'} ref='deleteFrame' onClick={() => this.props.deleteFrame(this.props.frame)} />
             </div>
         )
     }

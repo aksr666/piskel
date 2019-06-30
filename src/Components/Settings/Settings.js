@@ -11,32 +11,36 @@ export default class Settings extends React.Component {
     }
 
     showResizeInfo() {
-        if (!this.state.showSaveInfo && !this.state.showResizeInfo) {
+        const { showSaveInfo, showResizeInfo } = this.state;
+        const { settings, resizeInfo, saveInfo } = this.refs;
+        if (!showSaveInfo && !showResizeInfo) {
             this.setState({ showResizeInfo: true });
-            this.refs.settings.classList.add('show-settings');
-            this.refs.resizeInfo.style.borderRight = 'none';
+            settings.classList.add('show-settings');
+            resizeInfo.style.borderRight = 'none';
         }
-        if (this.state.showResizeInfo) this.refs.settings.classList.toggle('show-settings');
-        if (this.state.showSaveInfo) {
+        if (showResizeInfo) settings.classList.toggle('show-settings');
+        if (showSaveInfo) {
             this.setState({ showResizeInfo: true, showSaveInfo: false });
-            this.refs.saveInfo.style.borderRight = '3px solid black';
-            this.refs.resizeInfo.style.borderRight = 'none';
-            this.refs.settings.classList.add('show-settings');
+            saveInfo.style.borderRight = '3px solid black';
+            resizeInfo.style.borderRight = 'none';
+            settings.classList.add('show-settings');
         }
     }
 
     showSaveInfo() {
-        if (!this.state.showSaveInfo && !this.state.showResizeInfo) {
+        const { showSaveInfo, showResizeInfo } = this.state;
+        const { settings, resizeInfo, saveInfo } = this.refs;
+        if (!showSaveInfo && !showResizeInfo) {
             this.setState({ showSaveInfo: true });
-            this.refs.settings.classList.add('show-settings');
-            this.refs.saveInfo.style.borderRight = 'none';
+            settings.classList.add('show-settings');
+            saveInfo.style.borderRight = 'none';
         }
-        if (this.state.showSaveInfo) this.refs.settings.classList.toggle('show-settings');
-        if (this.state.showResizeInfo) {
+        if (showSaveInfo) settings.classList.toggle('show-settings');
+        if (showResizeInfo) {
             this.setState({ showResizeInfo: false, showSaveInfo: true });
-            this.refs.resizeInfo.style.borderRight = '3px solid black';
-            this.refs.saveInfo.style.borderRight = 'none';
-            this.refs.settings.classList.add('show-settings');
+            resizeInfo.style.borderRight = '3px solid black';
+            saveInfo.style.borderRight = 'none';
+            settings.classList.add('show-settings');
         }
     }
 

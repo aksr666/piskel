@@ -2,7 +2,7 @@
   "name": "piskel-clone",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.com/aksr666/Piskel/tree/gh-pages",
+
   "dependencies": {
     "downloadjs": "^1.4.7",
     "enzyme": "^3.10.0",

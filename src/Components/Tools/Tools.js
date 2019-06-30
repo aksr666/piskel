@@ -5,16 +5,17 @@ import Shortcuts from './Shortcuts/Shortcuts';
 export default class Tools extends React.Component {
 
     createButtons() {
+        const { tools, setTools } = this.props;
         const buttons = [];
-        for (const key in this.props.tools) {
+        for (const key in tools) {
             let checked = true;
-            if (this.props.tools[key].value) checked = false;
+            if (tools[key].value) checked = false;
             buttons.push(<Tool
                 checked={checked}
                 name={key}
                 key={key}
-                callBack={() => this.props.setTools(key)}
-                shortcut={this.props.tools[key].shortcut}
+                callBack={() => setTools(key)}
+                shortcut={tools[key].shortcut}
             />);
         }
         return buttons;

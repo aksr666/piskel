@@ -2,11 +2,12 @@ import React from 'react';
 
 export default class CanvasInfo extends React.PureComponent {
     render() {
-        let x = this.props.mousePosition.x;
-        let y = this.props.mousePosition.y
-        if (x >= this.props.size - 1) x = this.props.size;
+        const { mousePosition, size } = this.props;
+        let x = mousePosition.x;
+        let y = mousePosition.y
+        if (x >= size - 1) x = size;
         if (x <= 0) x = 1;
-        if (y >= this.props.size - 1) y = this.props.size;
+        if (y >= size - 1) y = size;
         if (y <= 0) y = 1;
         return (
             <div className={'canvas-info'}>
@@ -16,7 +17,7 @@ export default class CanvasInfo extends React.PureComponent {
                     <p className={'cursor-position-y'}>{`Y: ${y}`}</p>
                 </div>
                 <div className={'canvas-size'}>
-                    <h3>{`Cavas size: ${this.props.size} x ${this.props.size}`}</h3>
+                    <h3>{`Cavas size: ${size} x ${size}`}</h3>
                 </div>
             </div>
         )

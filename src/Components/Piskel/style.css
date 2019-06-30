@@ -157,7 +157,7 @@ button::-moz-focus-inner {
   left: 18px;
   width: 1.5px;
   height: 30px;
-  background-color: #cccccc;
+  background-color: #ccc;
   transform: rotate(65deg);
 }
 .Rectangle::after {
@@ -204,7 +204,7 @@ button::-moz-focus-inner {
 input[type="color"] {
   width: 46px;
   height: 46px;
-  border: 5px solid #444444;
+  border: 5px solid #444;
   outline: none;
   padding: 0;
   transition: 0.3s;
@@ -235,8 +235,8 @@ input[type="color"] {
   width: 102px;
   height: 50px;
   margin: 5px 9px;
-  background-color: #222222;
-  border: 3px solid #888888;
+  background-color: #222;
+  border: 3px solid #888;
   border-radius: 4px;
   outline: none;
   transition: 0.3s;
@@ -245,7 +245,7 @@ input[type="color"] {
 .add-frame p {
   position: relative;
   font-size: 13px;
-  color: #888888;
+  color: #888;
   text-align: left;
   line-height: 14px;
   padding-left: 26px;
@@ -324,7 +324,7 @@ input[type="color"] {
   height: 30px;
   border: none;
   border-radius: 3px;
-  background-color: #64646499;
+  background-color: #646464;
   background-position: center center;
   background-size: 18px;
   background-repeat: no-repeat;
@@ -431,7 +431,7 @@ input[type="color"] {
   background-image: url("../../assets/bg.png");
   width: 640px;
   height: 640px;
-  border: 1px solid #000000;
+  border: 1px solid #000;
   overflow: hidden;
 }
 .previev-container {
@@ -465,7 +465,7 @@ input[type="color"] {
   height: 40px;
   border: none;
   border-radius: 4px;
-  background-color: #64646499;
+  background-color: #646464;
   background-image: url("../../assets/svg/popup.svg");
   background-position: center center;
   background-size: 32px;
@@ -478,14 +478,14 @@ input[type="range"]::-webkit-slider-runnable-track {
   width: 100%;
   height: 8.4px;
   cursor: pointer;
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  box-shadow: 1px 1px 1px #000, 0px 0px 1px #0d0d0d;
   background: #ffd700;
   border-radius: 1.3px;
   border: 0.2px solid #010101;
 }
 input[type="range"]::-webkit-slider-thumb {
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  border: 1px solid #000000;
+  box-shadow: 1px 1px 1px #000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000;
   height: 36px;
   width: 10px;
   border-radius: 3px;
@@ -592,7 +592,7 @@ input[type="range"] {
   border: none;
   font-size: 21px;
   cursor: pointer;
-  border-right: 1px solid #000000;
+  border-right: 1px solid #000;
 }
 .cancel-sc-btn {
   width: 450px;
@@ -600,13 +600,13 @@ input[type="range"] {
   border: none;
   font-size: 21px;
   cursor: pointer;
-  border-left: 1px solid #000000;
+  border-left: 1px solid #000;
 }
 .layers-info {
   display: flex;
   flex-direction: column;
   width: 225px;
-  border: 1px solid #ffffff;
+  border: 1px solid #fff;
 }
 .layers-info h3 {
   margin-left: 5px;
@@ -622,7 +622,7 @@ input[type="range"] {
   cursor: pointer;
   width: 30px;
   height: 30px;
-  border: 1px solid #ffffff;
+  border: 1px solid #fff;
   color: #ffd700;
   font-weight: bold;
   font-size: 20px;
@@ -650,14 +650,14 @@ input[type="range"] {
   background-position: center center;
   background-size: 28px;
   background-repeat: no-repeat;
-  background-color: #444444;
-  border: 3px solid #444444;
+  background-color: #444;
+  border: 3px solid #444;
   cursor: pointer;
 }
 .layers-header {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #ffffff;
+  border-bottom: 1px solid #fff;
   height: 48px;
   align-items: center;
 }
@@ -665,7 +665,7 @@ input[type="range"] {
   font-weight: bold;
   height: 24px;
   padding: 5px 0 0 8px;
-  border: 1px solid #ffffff;
+  border: 1px solid #fff;
   margin: 1px;
   cursor: pointer;
 }
@@ -700,7 +700,7 @@ input[type="range"] {
 }
 .settings-info-container {
   width: 80%;
-  background: #444444;
+  background: #444;
 }
 .show-settings {
   margin-right: 0px;
@@ -716,8 +716,8 @@ input[type="range"] {
   background-position: center center;
   background-size: 28px;
   background-repeat: no-repeat;
-  background-color: #444444;
-  border: 3px solid #000000;
+  background-color: #444;
+  border: 3px solid #000;
   cursor: pointer;
 }
 .saveInfo-btn {
@@ -754,10 +754,10 @@ input[type="range"] {
 .main-title-left button {
   width: 150px;
   height: 50px;
-  border: 2px solid #000000;
+  border: 2px solid #000;
   cursor: pointer;
   border-radius: 4px;
-  color: #000000;
+  color: #000;
   font-size: 18px;
   font-weight: bold;
   margin-top: 46px;
@@ -888,7 +888,7 @@ input[type="range"] {
 }
 .about-container {
   display: flex;
-  background: #000000;
+  background: #000;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -933,7 +933,6 @@ input[type="range"] {
   justify-content: space-around;
   align-items: center;
 }
-
 .import-file {
   background-image: url("../../assets/svg/import.svg");
   width: 30px;

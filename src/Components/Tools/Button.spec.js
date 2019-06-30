@@ -1,8 +1,8 @@
 import React from 'react';
-import Button from './Button';
+import Tool from './Tool';
 import { shallow } from 'enzyme';
 
-describe('Button', () => {
+describe('Tool', () => {
     const props = {
         checked: true,
         name: 'pen',
@@ -10,21 +10,21 @@ describe('Button', () => {
         callBack: () => {},
         shortcut: () => {},
     }
-    const button = shallow(<Button {...props} />);
-    it('button renders properly', () => {
-        expect(button).toMatchSnapshot()
+    const tools = shallow(<Tool {...props} />);
+    it('tools renders properly', () => {
+        expect(tools).toMatchSnapshot()
     });
 
-    it('button has class (button-wrapper)', () => {
-        expect(button.hasClass("button-wrapper")).toEqual(true);
+    it('tools has class (button-wrapper)', () => {
+        expect(tools.hasClass("button-wrapper")).toEqual(true);
     });
 
-    it('button shows discription for tool when mouseEnter', () => {
-        button.setState({ showTooltip: true });
-        expect(button.find('div.tooltip')).toHaveLength(1);
+    it('tools shows discription for tool when mouseEnter', () => {
+        tools.setState({ showTooltip: true });
+        expect(tools.find('div.tooltip')).toHaveLength(1);
     });
 
-    it('button is render tool name correctly', () => {
-        expect(button.find('p').text()).toEqual(`${props.name} tool(() => {})`);
+    it('tools is render tool name correctly', () => {
+        expect(tools.find('p').text()).toEqual(`${props.name} tool(() => {})`);
     });
 });

@@ -1,7 +1,6 @@
 import React from 'react';
 import ShortcutsPopup from './ShortcutsPopup';
 
-
 export default class Shortcuts extends React.Component {
     constructor(props) {
         super(props);
@@ -19,7 +18,8 @@ export default class Shortcuts extends React.Component {
     }
 
     togglePopup() {
-        this.setState({ showPopup: !this.state.showPopup });
+        const { showPopup } = this.state;
+        this.setState({ showPopup: !showPopup });
     }
 
     render() {

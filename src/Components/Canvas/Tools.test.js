@@ -1,6 +1,5 @@
-import { drawCircle, pen, eraser, stroke, mirror, bucket, rectangle, lighten, dithering, colorPicker, move, brush, verticalReverse, horizontalReverse } from './Tools';
+import { pen, eraser } from './Tools';
 
-const frame = Array.from(Array(32).fill([0, 0, 0, 0]), () => new Array(32).fill([0, 0, 0, 0]));
 const  colors = {
     main: '#000000',
     extra: '#8080ff',

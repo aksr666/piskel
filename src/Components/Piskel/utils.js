@@ -5,6 +5,10 @@ const createFrame = (size) => {
     return frame;
 };
 
+const createFrameCopy = (copy) => JSON.parse(JSON.stringify(copy));
+
+const createFramesCopy = (frames) => JSON.parse(JSON.stringify(frames)).map((frame) => JSON.parse(JSON.stringify(frame)));
+
 const createLayer = (size) => Array.from(Array(size).fill([0, 0, 0, 0]), () => new Array(size).fill([0, 0, 0, 0]));
 
 const renderLayers = (canvas, layers, currentLayer, pikselSize) => {
@@ -34,10 +38,6 @@ const renderLayers = (canvas, layers, currentLayer, pikselSize) => {
         }
     });
 }
-
-const createFrameCopy = (copy) => JSON.parse(JSON.stringify(copy));
-
-const createFramesCopy = (frames) => JSON.parse(JSON.stringify(frames)).map((frame) => JSON.parse(JSON.stringify(frame)));
 
 const renderCanvas = (canvas, frame, pikselSize, layers) => {
     const context = canvas.getContext("2d");

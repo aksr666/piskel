@@ -21,14 +21,7 @@ const convertRgbToHex = (rgb) => {
 const pen = (e, x, y, frame, colors) => {
   e.nativeEvent.buttons === 1 ? frame[x][y] = convertHexToRgba(colors.main) : frame[x][y] = convertHexToRgba(colors.extra);
 }
-// function pen(event) {
-//   if (currentTool() !== 'pen' || !isDrawing) return;
-//   ctx.fillStyle = currentColor();
-//   let size = boxSize();
-//   const x = Math.floor(event.offsetX / scale() / size) * size;
-//   const y = Math.floor(event.offsetY / scale() / size) * size;
-//   ctx.fillRect(x, y, size, size);
-// }
+
 const eraser = (x, y, frame) => {
   frame[x][y] = [0, 0, 0, 0];
 }
@@ -89,16 +82,6 @@ const brush = (e, frame, colors) => {
     });
   });
 }
-// const bucket = (frame, x, y, size, color, currentColor) => {
-//   if (x >= 0 && x < size && y >= 0 && y < size) {
-//     if (frame[x][y].toString() !== currentColor.toString()) return;
-//     frame[x][y] = convertHexToRgba(color);
-//     bucket(frame, x + 1, y, size, color, currentColor);
-//     bucket(frame, x - 1, y, size, color, currentColor);
-//     bucket(frame, x, y + 1, size, color, currentColor);
-//     bucket(frame, x, y - 1, size, color, currentColor);
-//   }
-// }
 
 const horizontalReverse = (frame) => {
   frame.reverse();

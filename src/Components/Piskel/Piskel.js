@@ -12,7 +12,7 @@ import Header from '../Header/Header';
 import Settings from '../Settings/Settings';
 import { createFrame, createFrameCopy, createFramesCopy, resize, createStateCopy, saveToGoogleDrive, saveAsPiskel, uploadProject } from './utils';
 
-class Piskel extends React.Component {
+export default class Piskel extends React.Component {
   constructor(props) {
     super(props);
     this.targetsToSwap = {
@@ -58,8 +58,23 @@ class Piskel extends React.Component {
     if (localStorage.getItem('state')) this.setState({ ...JSON.parse(localStorage.getItem('state')) });
   }
 
+  startProject() {
+    this.setState({ projectIsStarted: true });
+  }
+
   setFramesToSave(framesToSaveAsGif, framesToSaveAsApng, animationSpeed) {
     this.setState({ framesToSaveAsGif, framesToSaveAsApng, animationSpeed });
+  }
+
+  saveAsGif() {
+    gifshot.createGIF({
+      images: this.state.framesToSaveAsGif,
+      interval: 1 / this.state.animationSpeed,
+      gifWidth: 384,
+      gifHeight: 384,
+    }, (obj) => {
+      if (!obj.error) download(obj.image, 'newGif.gif', 'gif');
+    });
   }
 
   saveToLocalStorage() {
@@ -91,12 +106,8 @@ class Piskel extends React.Component {
 
   stepBack() {
     const step = this.state.stateHistory.pop();
-    const {
-      speed, canvasSize, frames, currentFrame, colors, tools,
-    } = step;
-    this.setState({
-      speed, canvasSize, frames, currentFrame, colors, tools,
-    });
+    const { speed, canvasSize, frames, currentFrame, colors, tools } = step;
+    this.setState({ speed, canvasSize, frames, currentFrame, colors, tools });
   }
 
   saveCurrentState() {
@@ -115,10 +126,11 @@ class Piskel extends React.Component {
   }
 
   updateFrames(frame) {
-    if (JSON.stringify(this.state.frames[this.state.currentFrame]) === JSON.stringify(frame)) return false;
+    const { currentFrame } = this.state
+    if (JSON.stringify(this.state.frames[currentFrame]) === JSON.stringify(frame)) return false;
     const frames = createFramesCopy(this.state.frames);
     const stateHistory = this.saveCurrentState();
-    frames[this.state.currentFrame] = frame;
+    frames[currentFrame] = frame;
     this.setState({ frames, stateHistory });
   }
 
@@ -129,22 +141,21 @@ class Piskel extends React.Component {
   }
 
   addFrame() {
+    let { canvasSize, currentFrame } = this.state;
     const frames = createFramesCopy(this.state.frames);
     const stateHistory = this.saveCurrentState();
-    frames.push(createFrame(this.state.canvasSize));
-    let currentFrame = this.state.currentFrame;
+    frames.push(createFrame(canvasSize));
     currentFrame += 1;
     this.setState({ frames, currentFrame, stateHistory });
   }
 
-
   deleteFrame(frame) {
+    let { canvasSize, currentFrame } = this.state;
     const frames = createFramesCopy(this.state.frames);
     const stateHistory = this.saveCurrentState();
     if (frames.length === 1) {
-      this.setState({ frames: [createFrame(this.state.canvasSize)], stateHistory });
+      this.setState({ frames: [createFrame(canvasSize)], stateHistory });
     } else {
-      let { currentFrame } = this.state;
       const index = this.state.frames.indexOf(frame);
       if (currentFrame !== 0) currentFrame -= 1;
       frames.splice(index, 1);
@@ -155,27 +166,28 @@ class Piskel extends React.Component {
   cloneFrame(frame) {
     const frames = createFramesCopy(this.state.frames);
     const stateHistory = this.saveCurrentState();
-    let currentFrame = this.state.currentFrame;
-    currentFrame++;
+    let { currentFrame } = this.state;
+    currentFrame += 1;
     frames.splice(this.state.frames.indexOf(frame), 0, createFrameCopy(frame));
     this.setState({ frames, currentFrame, stateHistory });
   }
 
   setColor(value, isMain) {
+    const { colors } = this.state;
     const stateHistory = this.saveCurrentState();
     if (isMain) {
       this.setState({
         stateHistory,
         colors: {
           main: value,
-          extra: this.state.colors.extra,
+          extra: colors.extra,
         },
       });
     } else {
       this.setState({
         stateHistory,
         colors: {
-          main: this.state.colors.main,
+          main: colors.main,
           extra: value,
         },
       });
@@ -183,14 +195,9 @@ class Piskel extends React.Component {
   }
 
   swapColors() {
+    const { colors } = this.state;
     const stateHistory = this.saveCurrentState();
-    this.setState(state => ({
-      stateHistory,
-      colors: {
-        main: state.colors.extra,
-        extra: state.colors.main,
-      },
-    }));
+    this.setState({ colors: { main: colors.extra, extra: colors.main }, stateHistory });
   }
 
   setTools(tool) {
@@ -211,32 +218,18 @@ class Piskel extends React.Component {
   }
 
   setTargetToSwap(frame, first) {
-    if (first) this.targetsToSwap.firstTarget = frame;
-    else this.targetsToSwap.secondTarget = frame;
+    const { targetsToSwap } = this;
+    if (first) targetsToSwap.firstTarget = frame;
+    else targetsToSwap.secondTarget = frame;
   }
-
-  saveAsGif() {
-    gifshot.createGIF({
-      images: this.state.framesToSaveAsGif,
-      interval: 1 / this.state.animationSpeed,
-      gifWidth: 384,
-      gifHeight: 384,
-    }, (obj) => {
-      if (!obj.error) download(obj.image, 'newGif.gif', 'gif');
-    });
-  }
-
-  startProject() {
-    this.setState({ projectIsStarted: true });
-  }
-
 
   swapFrames() {
-    if (!this.targetsToSwap.secondTarget || this.targetsToSwap.firstTarget === this.targetsToSwap.secondTarget) return;
+    const { targetsToSwap } = this;
+    if (!targetsToSwap.secondTarget || targetsToSwap.firstTarget === targetsToSwap.secondTarget) return;
     const stateHistory = this.saveCurrentState();
     const frames = createFramesCopy(this.state.frames);
-    frames.splice(this.state.frames.indexOf(this.targetsToSwap.firstTarget), 1, this.targetsToSwap.secondTarget);
-    frames.splice(this.state.frames.indexOf(this.targetsToSwap.secondTarget), 1, this.targetsToSwap.firstTarget);
+    frames.splice(this.state.frames.indexOf(targetsToSwap.firstTarget), 1, targetsToSwap.secondTarget);
+    frames.splice(this.state.frames.indexOf(targetsToSwap.secondTarget), 1, targetsToSwap.firstTarget);
     this.setState({ frames, stateHistory });
   }
 
@@ -298,7 +291,3 @@ class Piskel extends React.Component {
     );
   }
 }
-
-export default Piskel;
-
-

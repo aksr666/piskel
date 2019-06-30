@@ -15,8 +15,6 @@ export default class Canvas extends React.Component {
             firstLayer: null,
             secondLayer: null,
         }
-        this.pikselSize = null;
-        this.canvas = null;
         this.isDrawing = false;
         this.canvasSize = 640;
         this.startCoords = {};
@@ -31,133 +29,149 @@ export default class Canvas extends React.Component {
     }
 
     componentDidMount() {
-        const canvas = this.refs.canvas;
-        this.pikselSize = Math.floor(this.canvasSize / this.props.canvasSize);
+        const { frame, canvasSize } = this.props;
+        const { canvas } = this.refs;
+        this.pikselSize = Math.floor(this.canvasSize / canvasSize);
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
-        renderCanvas(canvas, this.props.frame.layers[this.props.frame.currentLayer], this.pikselSize);
+        renderCanvas(canvas, frame.layers[frame.currentLayer], this.pikselSize);
     }
 
     componentDidUpdate() {
-        this.pikselSize = this.canvasSize / this.props.canvasSize;
-        if (this.frameCopy) return;
-        if (this.state.showLayers) renderLayers(this.canvas, createFramesCopy(this.props.frame.layers), this.props.frame.currentLayer, this.pikselSize);
-        else renderCanvas(this.canvas, this.props.frame.layers[this.props.frame.currentLayer], this.pikselSize);
+        const { frame, canvasSize } = this.props;
+        this.pikselSize = this.canvasSize / canvasSize;
+        const { showLayers } = this.state;
+        const { canvas, pikselSize, frameCopy } = this;
+        if (frameCopy) return;
+        if (showLayers) renderLayers(canvas, createFramesCopy(frame.layers), frame.currentLayer, pikselSize);
+        else renderCanvas(canvas, frame.layers[frame.currentLayer], pikselSize);
     }
 
     mouseDownHandler(e) {
         e.preventDefault();
         this.isDrawing = true;
-        this.startCoords.x = Math.floor(e.nativeEvent.offsetX / this.pikselSize);
-        this.startCoords.y = Math.floor(e.nativeEvent.offsetY / this.pikselSize);
-        if (this.props.tools.Stroke.value || this.props.tools.Rectangle.value || this.props.tools.Circle.value) this.frameCopy = createFrameCopy(this.props.frame);
-        if (this.props.tools.Pen.value) pen(e, this.startCoords.x, this.startCoords.y, this.props.frame.layers[this.props.frame.currentLayer], this.props.colors);
-        this.state.showLayers ? renderLayers(this.canvas, createFramesCopy(this.props.frame.layers), this.props.frame.currentLayer, this.pikselSize)
-        : renderCanvas(this.canvas, this.props.frame.layers[this.props.frame.currentLayer], this.pikselSize);
+        const { tools, frame, colors } = this.props;
+        const { showLayers } = this.state;
+        let { startCoords, pikselSize, canvas } = this;
+        this.startCoords.x = Math.floor(e.nativeEvent.offsetX / pikselSize);
+        this.startCoords.y = Math.floor(e.nativeEvent.offsetY / pikselSize);
+        if (tools.Stroke.value || tools.Rectangle.value || tools.Circle.value) this.frameCopy = createFrameCopy(frame);
+        if (tools.Pen.value) pen(e, startCoords.x, startCoords.y, frame.layers[frame.currentLayer], colors);
+        showLayers ? renderLayers(canvas, createFramesCopy(frame.layers), frame.currentLayer, pikselSize)
+            : renderCanvas(canvas, frame.layers[frame.currentLayer], pikselSize);
     }
 
     mouseMoveHandler(e) {
-        let x = Math.floor(e.nativeEvent.offsetX / this.pikselSize);
-        let y = Math.floor(e.nativeEvent.offsetY / this.pikselSize);
+        const { tools, frame, colors, canvasSize } = this.props;
+        const { showLayers } = this.state;
+        const { frameCopy, startCoords, pikselSize, canvas, isDrawing } = this;
+        let x = Math.floor(e.nativeEvent.offsetX / pikselSize);
+        let y = Math.floor(e.nativeEvent.offsetY / pikselSize);
         if (x <= 0) x = 0;
-        if (x > this.props.canvasSize - 1) x = this.props.canvasSize - 1;
+        if (x > canvasSize - 1) x = canvasSize - 1;
         if (y <= 0) y = 0;
-        if (y > this.props.canvasSize - 1) y = this.props.canvasSize - 1;
-        if (this.props.tools.Pen.value && this.isDrawing) pen(e, x, y, this.props.frame.layers[this.props.frame.currentLayer], this.props.colors);
-        if (this.props.tools.Mirror.value && this.isDrawing) mirror(e, x, y, this.props.frame.layers[this.props.frame.currentLayer], this.props.colors);
-        if (this.props.tools.Dithering.value && this.isDrawing) dithering(e, x, y, this.props.frame.layers[this.props.frame.currentLayer], this.props.colors, this.props.canvasSize);
-        if (this.props.tools.Move.value && this.isDrawing) move(x, y, this.startCoords, this.props.frame.layers[this.props.frame.currentLayer], this.props.canvasSize);
-        if (this.props.tools.Eraser.value && this.isDrawing) eraser(x, y, this.props.frame.layers[this.props.frame.currentLayer]);
-        if (this.props.tools.Stroke.value && this.isDrawing) {
-            const clone = createFrameCopy(this.props.frame);
-            this.frameCopy.layers[this.frameCopy.currentLayer] = stroke(e, this.startCoords.x, this.startCoords.y, x, y, clone.layers[clone.currentLayer], this.props.colors);
-            this.state.showLayers ? renderLayers(this.canvas, createFramesCopy(this.frameCopy.layers), this.props.frame.currentLayer, this.pikselSize) 
-            : renderCanvas(this.canvas, this.frameCopy.layers[this.frameCopy.currentLayer], this.pikselSize);
+        if (y > canvasSize - 1) y = canvasSize - 1;
+        if (tools.Pen.value && isDrawing) pen(e, x, y, frame.layers[frame.currentLayer], colors);
+        if (tools.Mirror.value && isDrawing) mirror(e, x, y, frame.layers[frame.currentLayer], colors);
+        if (tools.Dithering.value && isDrawing) dithering(e, x, y, frame.layers[frame.currentLayer], colors, canvasSize);
+        if (tools.Move.value && isDrawing) move(x, y, startCoords, frame.layers[frame.currentLayer], canvasSize);
+        if (tools.Eraser.value && isDrawing) eraser(x, y, frame.layers[frame.currentLayer]);
+        if (tools.Stroke.value && isDrawing) {
+            const clone = createFrameCopy(frame);
+            frameCopy.layers[frameCopy.currentLayer] = stroke(e, startCoords.x, startCoords.y, x, y, clone.layers[clone.currentLayer], colors);
+            showLayers ? renderLayers(canvas, createFramesCopy(frameCopy.layers), frame.currentLayer, pikselSize)
+                : renderCanvas(canvas, frameCopy.layers[frameCopy.currentLayer], pikselSize);
         }
-        if (this.props.tools.Rectangle.value && this.isDrawing) {
-            const clone = createFrameCopy(this.props.frame);
-            this.frameCopy.layers[this.frameCopy.currentLayer] = rectangle(e, this.startCoords, x, y, clone.layers[clone.currentLayer], this.props.colors);
-            this.state.showLayers ? renderLayers(this.canvas, createFramesCopy(this.frameCopy.layers), this.props.frame.currentLayer, this.pikselSize) 
-            : renderCanvas(this.canvas, this.frameCopy.layers[this.frameCopy.currentLayer], this.pikselSize);
+        if (tools.Rectangle.value && isDrawing) {
+            const clone = createFrameCopy(frame);
+            frameCopy.layers[frameCopy.currentLayer] = rectangle(e, startCoords, x, y, clone.layers[clone.currentLayer], colors);
+            showLayers ? renderLayers(canvas, createFramesCopy(frameCopy.layers), frame.currentLayer, pikselSize)
+                : renderCanvas(canvas, frameCopy.layers[frameCopy.currentLayer], pikselSize);
         }
-        if (this.props.tools.Circle.value && this.isDrawing) {
-            const clone = createFrameCopy(this.props.frame);
-            this.frameCopy.layers[this.frameCopy.currentLayer] = drawCircle(e, clone.layers[clone.currentLayer], this.startCoords, x, y, this.props.colors, this.props.canvasSize);
-            this.state.showLayers ? renderLayers(this.canvas, createFramesCopy(this.frameCopy.layers), this.props.frame.currentLayer, this.pikselSize) 
-            : renderCanvas(this.canvas, this.frameCopy.layers[this.frameCopy.currentLayer], this.pikselSize);
+        if (tools.Circle.value && isDrawing) {
+            const clone = createFrameCopy(frame);
+            frameCopy.layers[frameCopy.currentLayer] = drawCircle(e, clone.layers[clone.currentLayer], startCoords, x, y, colors, canvasSize);
+            showLayers ? renderLayers(canvas, createFramesCopy(frameCopy.layers), frame.currentLayer, pikselSize)
+                : renderCanvas(canvas, frameCopy.layers[frameCopy.currentLayer], pikselSize);
         }
         this.setMousePosition({ x, y });
     }
 
     mouseUpHandler() {
         this.isDrawing = false;
-        if (this.frameCopy) {
-            this.props.updateFrames(this.frameCopy);
+        const { tools, frame, updateFrames } = this.props;
+        const { frameCopy } = this;
+        if (frameCopy) {
+            updateFrames(frameCopy);
             this.frameCopy = null;
         }
-        else if (!this.props.tools.Bucket.value 
-            && !this.props.tools.ColorPicker.value
-            && !this.props.tools.Lighten.value 
-            && !this.props.tools.Brush.value
-            && !this.props.tools.VerticalReverse.value 
-            && !this.props.tools.HorizontalReverse.value) this.props.updateFrames(this.props.frame);
+        else if (!tools.Bucket.value && !tools.ColorPicker.value && !tools.Lighten.value
+            && !tools.Brush.value && !tools.VerticalReverse.value && !tools.HorizontalReverse.value) updateFrames(frame);
     }
 
     mouseClickHandler(e) {
         e.preventDefault();
-        if (this.props.tools.Bucket.value) bucket(e, this.props.frame.layers[this.props.frame.currentLayer], this.startCoords.x, this.startCoords.y, this.props.canvasSize, this.props.colors);
-        if (this.props.tools.ColorPicker.value) colorPicker(e, this.props.frame.layers[this.props.frame.currentLayer], this.startCoords, this.props.setColor);
-        if (this.props.tools.Lighten.value) lighten(e, this.props.frame.layers[this.props.frame.currentLayer], this.pikselSize);
-        if (this.props.tools.Brush.value) brush(e, this.props.frame, this.props.colors);
-        if (this.props.tools.VerticalReverse.value) verticalReverse(this.props.frame.layers[this.props.frame.currentLayer]);
-        if (this.props.tools.HorizontalReverse.value) horizontalReverse(this.props.frame.layers[this.props.frame.currentLayer]);
-        this.state.showLayers ? renderLayers(this.canvas, createFramesCopy(this.props.frame.layers), this.props.frame.currentLayer, this.pikselSize) 
-        : renderCanvas(this.canvas, this.props.frame.layers[this.props.frame.currentLayer], this.pikselSize);
-        if (this.props.tools.Bucket.value 
-            || this.props.tools.ColorPicker.value
-            || this.props.tools.Lighten.value 
-            || this.props.tools.Brush.value
-            || this.props.tools.VerticalReverse.value 
-            || this.props.tools.HorizontalReverse.value) this.props.updateFrames(this.props.frame);
+        const { tools, frame, colors, canvasSize, setColor, updateFrames } = this.props;
+        const { showLayers } = this.state;
+        const { startCoords, pikselSize, canvas } = this;
+        if (tools.Bucket.value) bucket(e, frame.layers[frame.currentLayer], startCoords.x, startCoords.y, canvasSize, colors);
+        if (tools.ColorPicker.value) colorPicker(e, frame.layers[frame.currentLayer], startCoords, setColor);
+        if (tools.Lighten.value) lighten(e, frame.layers[frame.currentLayer], pikselSize);
+        if (tools.Brush.value) brush(e, frame, colors);
+        if (tools.VerticalReverse.value) verticalReverse(frame.layers[frame.currentLayer]);
+        if (tools.HorizontalReverse.value) horizontalReverse(frame.layers[frame.currentLayer]);
+        showLayers ? renderLayers(canvas, createFramesCopy(frame.layers), frame.currentLayer, pikselSize)
+            : renderCanvas(canvas, frame.layers[frame.currentLayer], pikselSize);
+        if (tools.Bucket.value
+            || tools.ColorPicker.value
+            || tools.Lighten.value
+            || tools.Brush.value
+            || tools.VerticalReverse.value
+            || tools.HorizontalReverse.value) updateFrames(frame);
     }
 
     mouseLeaveHandler() {
-        if (this.isDrawing) {
-            if (this.frameCopy) {
-                renderCanvas(this.canvas, this.frameCopy, this.pikselSize);
-                this.props.frame.layers[this.props.frame.currentLayer] = this.frameCopy;
-                this.props.updateFrames(this.props.frame);
+        const { frame, updateFrames } = this.props;
+        const { frameCopy, pikselSize, canvas, isDrawing } = this;
+        if (isDrawing) {
+            if (frameCopy) {
+                renderCanvas(canvas, frameCopy.layers[frameCopy.currentLayer], pikselSize);
+                frame.layers[frame.currentLayer] = frameCopy.layers[frameCopy.currentLayer];
+                updateFrames(frame);
                 this.frameCopy = null;
             } else {
-                this.props.updateFrames(this.props.frame);
+                updateFrames(frame);
             }
         }
         this.isDrawing = false;
     }
-    
+
     mouseWheelHandler(e) {
+        const { canvas } = this;
         e = window.event;
         let delta = Math.max(-1, Math.min(1, e.wheelDelta));
-        this.refs.canvas.style.width = Math.max(640, Math.min(900, this.refs.canvas.offsetWidth + (32 * delta))) + "px";
-        this.refs.canvas.style.height = Math.max(640, Math.min(900, this.refs.canvas.offsetHeight + (32 * delta))) + "px";
+        canvas.style.width = Math.max(640, Math.min(900, canvas.offsetWidth + (32 * delta))) + "px";
+        canvas.style.height = Math.max(640, Math.min(900, canvas.offsetHeight + (32 * delta))) + "px";
     }
 
     setCurrentLayer(value) {
-        this.props.frame.currentLayer = value;
-        this.currentLayer = value;
-        this.props.updateFrames(this.props.frame);
+        const { frame, updateFrames } = this.props;
+        frame.currentLayer = value;
+        updateFrames(frame);
     }
 
     addLayer() {
-        this.props.frame.layers.push(createLayer(this.props.canvasSize));
-        this.props.frame.currentLayer++;
-        this.props.updateFrames(this.props.frame);
+        const { frame, canvasSize, updateFrames } = this.props;
+        frame.layers.push(createLayer(canvasSize));
+        frame.currentLayer++;
+        updateFrames(frame);
     }
 
     deleteLayer() {
-        this.props.frame.layers.splice(this.props.frame.currentLayer, 1);
-        if (this.props.frame.currentLayer !== 0) this.props.frame.currentLayer--;
-        this.props.updateFrames(this.props.frame);
+        const { frame, updateFrames } = this.props;
+        frame.layers.splice(frame.currentLayer, 1);
+        if (frame.currentLayer !== 0) frame.currentLayer -= 1;
+        updateFrames(frame);
     }
 
     toggleShowLayers() {
@@ -167,30 +181,35 @@ export default class Canvas extends React.Component {
     }
 
     setNextLayer() {
-        if (this.props.frame.currentLayer !== this.props.frame.layers.length - 1) {
-            this.props.frame.currentLayer++;
-            this.props.updateFrames(this.props.frame);
+        const { frame, updateFrames } = this.props;
+        if (frame.currentLayer !== frame.layers.length - 1) {
+            frame.currentLayer++;
+            updateFrames(frame);
         }
     }
 
     setPreviousLayer() {
-        if (this.props.frame.currentLayer !== 0) {
-            this.props.frame.currentLayer--;
-            this.props.updateFrames(this.props.frame);
+        const { frame, updateFrames } = this.props;
+        if (frame.currentLayer !== 0) {
+            frame.currentLayer--;
+            updateFrames(frame);
         }
     }
 
     setLayersToSwap(num, first) {
-        if (first) this.layersToSwap.firstLayer = num;
-        else this.layersToSwap.secondLayer = num;
+        const { layersToSwap } = this;
+        if (first) layersToSwap.firstLayer = num;
+        else layersToSwap.secondLayer = num;
     }
 
     swapLayers() {
-        const firstLayer = this.props.frame.layers[this.layersToSwap.firstLayer];
-        const secondLayer = this.props.frame.layers[this.layersToSwap.secondLayer];
-        this.props.frame.layers.splice(this.layersToSwap.firstLayer, 1, secondLayer);
-        this.props.frame.layers.splice(this.layersToSwap.secondLayer, 1, firstLayer);
-        this.props.updateFrames(this.props.frame);
+        const { frame, updateFrames } = this.props;
+        const { layersToSwap } = this;
+        const firstLayer = frame.layers[layersToSwap.firstLayer];
+        const secondLayer = frame.layers[layersToSwap.secondLayer];
+        frame.layers.splice(layersToSwap.firstLayer, 1, secondLayer);
+        frame.layers.splice(layersToSwap.secondLayer, 1, firstLayer);
+        updateFrames(frame);
     }
 
     render() {
@@ -213,7 +232,7 @@ export default class Canvas extends React.Component {
                         onMouseUp={() => this.mouseUpHandler()}
                         onClick={(e) => this.mouseClickHandler(e)}
                         onMouseLeave={() => this.mouseLeaveHandler()}
-                        onWheel = {(e) => this.mouseWheelHandler()}
+                        onWheel={(e) => this.mouseWheelHandler()}
                     />
                 </div>
                 <Layers

@@ -11,9 +11,10 @@ export default class ShortcutsPopup extends React.Component {
     }
 
     createBtnsInfo() {
+        const { tools } = this.state;
         const info = [];
-        for (let key in this.state.tools) {
-            info.push(<ShortcutInfo key={key} tool={key} shortcut={this.state.tools[key].shortcut} setShortcut={(tool, value) => this.setShortcut(tool, value)} />)
+        for (let key in tools) {
+            info.push(<ShortcutInfo key={key} tool={key} shortcut={tools[key].shortcut} setShortcut={(tool, value) => this.setShortcut(tool, value)} />)
         }
         return info;
     }
@@ -31,13 +32,15 @@ export default class ShortcutsPopup extends React.Component {
     }
 
     setDefaultValue() {
-        this.setState({ tools: this.copy});
+        const { copy } = this
+        this.setState({ tools: copy });
         this.props.togglePopup();
         this.forceUpdate();
     }
 
     updateShortcuts() {
-        this.props.updateShortcuts(this.state.tools);
+        const { tools } = this.state;
+        this.props.updateShortcuts(tools);
         this.props.togglePopup();
     }
 
